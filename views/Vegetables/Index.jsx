@@ -1,10 +1,9 @@
 const React = require('react');
-const vegetables = require('../models/vegetables');
 
 class Index extends React.Component {
     render() {
-        const { fruits} = this.props;
-        // const fruits = this.props.fruits;
+        const { vegetables} = this.props;
+        // const fruits = this.props.vegetables;
 
         return (
             <div>

@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const fruits = require('./models/fruits.js');
 const jsxViewEngine = require('jsx-view-engine');
+const vegetables = require('./models/vegetables.js')
 
 app.set('view engine', 'jsx');
 app.set('views', './views');
@@ -55,15 +56,23 @@ app.get('/', (req, res) => {
     res.send('this is my fruits root route');
 });
 
+
 // I - INDEX - dsiplays a list of all fruits
 app.get('/fruits/', (req, res) => {
-    // res.send(fruits);
+     res.send(fruits);
     res.render('Index', {fruits: fruits});
 });
 
-
+app.get('/vegetables/', (req, res) => {
+     res.send(vegetables);
+    res.render('Index', {vegetables: vegetables});
+});
 // N - NEW - allows a user to input a new fruit
 app.get('/fruits/new', (req, res) => {
+    res.render('New');
+});
+
+app.get('/vegetables/new', (req, res) => {
     res.render('New');
 });
 
@@ -78,15 +87,35 @@ app.post('/fruits', (req, res) => {
     fruits.push(req.body);
     // console.log(fruits);
     // console.log(req.body)
-    // res.send('data received');
+     res.send('data received');
     res.redirect('/fruits'); // send user back to /fruits
+})
+
+app.post('/vegetables', (req, res) => {
+    if(req.body.readyToEat === 'on') { //if checked, req.body.readyToEat is set to 'on'
+        req.body.readyToEat = true;
+    } else {  //if not checked, req.body.readyToEat is undefined
+        req.body.readyToEat = false;
+    }
+    vegetables.push(req.body);
+    // console.log(fruits);
+    // console.log(req.body)
+     res.send('data received');
+    res.redirect('/vegetables'); // send user back to /vegetables
 })
 
 // S - SHOW - show route displays details of an individual fruit
 app.get('/fruits/:indexOfFruitsArray', (req, res) => {
-    // res.send(fruits[req.params.indexOfFruitsArray]);
-    res.render('Show', {// second parameter must be an object
+     res.send(fruits[req.params.indexOfFruitsArray]);
+    res.render('Fruits/Show', {// second parameter must be an object
         fruit: fruits[req.params.indexOfFruitsArray]
+    });
+})
+
+app.get('/vegetables/:indexOfVegetablesArray', (req, res) => {
+     // res.send(fruits[req.params.indexOfVegetablesArray]);
+    res.render('Vegetables/Show', {// second parameter must be an object
+        vegetable: vegetables[req.params.indexOfVegetablesArray]
     });
 })
 
