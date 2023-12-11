@@ -5,7 +5,7 @@ const app = express();
 // const vegetables = require('./models/vegetables.js')
 const mongoose = require('mongoose');
 const Fruit = require('./models/fruit')
-const vegetables = require('./models/vegetables.js')
+const Vegetable = require('./models/vegetable.js')
 const jsxViewEngine = require('jsx-view-engine');
 
 //Global Configuration
@@ -139,7 +139,7 @@ app.post('/vegetables', async (req, res) => {
     // console.log(fruits);
     // console.log(req.body)
     //  res.send('data received');
-    res.redirect('/vegetables'); // send user back to /vegetables
+    // res.redirect('/vegetables'); // send user back to /vegetables
 })
 
 // S - SHOW - show route displays details of an individual fruit
