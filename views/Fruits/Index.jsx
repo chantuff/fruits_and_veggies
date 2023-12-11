@@ -2,7 +2,7 @@ const React = require('react');
 
 class Index extends React.Component {
     render() {
-        const { fruits} = this.props;
+        const { fruits } = this.props;
         // const fruits = this.props.fruits;
 
         return (
@@ -16,7 +16,7 @@ class Index extends React.Component {
                         return (
                             <li>
                                 The {' '}
-                                <a href={`/fruits/${i}`}>
+                                <a href={`/fruits/${fruit._id}`}>
                                     {fruit.name}
                                 </a> {' '}
                                 is {fruit.color} <br></br>
