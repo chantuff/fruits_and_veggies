@@ -25,6 +25,10 @@ class Index extends React.Component {
                                 ? `It is ready to eat`
                             : `It is NOT ready to eat`}
                             <br />
+                            <a href={`/vegtables/${vegetable._id}/edit`}> Edit This Vegetable </a>
+                            <form action={`/vegetabls/${vegetable._id}?_method=DELETE`} method="POST">
+                                <input type="submit" value="DELETE" />
+                            </form>
                             </li>
                         )
                     })
