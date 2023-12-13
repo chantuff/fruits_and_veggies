@@ -10,6 +10,7 @@ const app = express();
 // we want to import the fruit model
 const Fruit = require('./models/fruit');
 const jsxViewEngine = require('jsx-view-engine');
+const Vegetable = require('./models/vegetable');
 
 // Global configuration
 const mongoURI = process.env.MONGO_URI;
@@ -108,10 +109,27 @@ app.get('/fruits/', async (req, res) => {
     
 });
 
+// I - INDEX - dsiplays a list of all vegetables
+app.get('/vegetables/', async (req, res) => {
+    // res.send(fruits);
+    try {
+        const foundVegetables = await Vegetable.find({});
+        res.status(200).render('vegetables/Index', {vegetables: foundVegetables});
+    } catch (err) {
+        res.status(400).send(err);
+    }
+    
+});
+
 
 // N - NEW - allows a user to input a new fruit
 app.get('/fruits/new', (req, res) => {
     res.render('fruits/New');
+});
+
+// N - NEW - allows a user to input a new vegetable
+app.get('/vegetables/new', (req, res) => {
+    res.render('vegetables/New');
 });
 
 // D - DELETE - PERMANENTLY removes fruit from the database
@@ -121,6 +139,18 @@ app.delete('/fruits/:id', async (req, res) => {
         const deletedFruit = await Fruit.findByIdAndDelete(req.params.id);
         console.log(deletedFruit);
         res.status(200).redirect('/fruits');
+    } catch (err) {
+        res.status(400).send(err);
+    }
+})
+
+// D - DELETE - PERMANENTLY removes vegetables from the database
+app.delete('/vegetables/:id', async (req, res) => {
+    // res.send('deleting...');
+    try {
+        const deletedVegetable = await Vegetable.findByIdAndDelete(req.params.id);
+        console.log(deletedVegetable);
+        res.status(200).redirect('/vegetables');
     } catch (err) {
         res.status(400).send(err);
     }
@@ -142,6 +172,28 @@ app.put('/fruits/:id', async (req, res) => {
         );
         console.log(updatedFruit);
         res.status(200).redirect(`/fruits/${req.params.id}`);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+ })
+
+
+ // U - UPDATE - makes the actual changes to the database based on the EDIT form
+app.put('/vegetables/:id', async (req, res) => {
+    if (req.body.readyToEat === 'on') {
+        req.body.readyToEat = true;
+    } else {
+        req.body.readyToEat = false;
+    }
+
+    try {
+        const updatedVegetable = await Vegetable.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true },
+        );
+        console.log(updatedVegetable);
+        res.status(200).redirect(`/vegetables/${req.params.id}`);
     } catch (err) {
         res.status(400).send(err);
     }
@@ -170,6 +222,29 @@ app.post('/fruits', async (req, res) => {
     // res.redirect('/fruits'); // send user back to /fruits
 })
 
+// C - CREATE - update our data store
+app.post('/vegetables', async (req, res) => {
+    if(req.body.readyToEat === 'on') { //if checked, req.body.readyToEat is set to 'on'
+        req.body.readyToEat = true;
+    } else {  //if not checked, req.body.readyToEat is undefined
+        req.body.readyToEat = false;
+    }
+
+    try {
+        const createdVegetable = await Vegetable.create(req.body);
+        res.status(200).redirect('/fruits');
+    } catch (err) {
+        res.status(400).send(err);
+    }
+    // vegetables.push(req.body);
+    // console.log(fruits);
+    // console.log(req.body)
+    // res.send('data received');
+    //  *** We will add this back in later
+    //  ***
+    // res.redirect('/vegetables'); // send user back to /vegetables
+})
+
 // E - EDIT - allow the user to provide the inputs to change the fruit
 app.get('/fruits/:id/edit', async (req, res) => {
     try {
@@ -182,12 +257,35 @@ app.get('/fruits/:id/edit', async (req, res) => {
     }
 })
 
+// E - EDIT - allow the user to provide the inputs to change the fruit
+app.get('/vegetables/:id/edit', async (req, res) => {
+    try {
+        const foundVegetables = await Fruit.findById(req.params.id);
+        console.log('foundVegetables');
+        console.log(foundVegetable)
+        res.status(200).render('vegetables/Edit', {vegetable: foundVegetable});
+    } catch (err) {
+        res.status(400).send(err);
+    }
+})
 // S - SHOW - show route displays details of an individual fruit
 app.get('/fruits/:id', async (req, res) => {
     // res.send(fruits[req.params.indexOfFruitsArray]);
     try {
         const foundFruit = await Fruit.findById(req.params.id);
         res.render('fruits/Show', {fruit: foundFruit});
+    } catch (err) {
+        res.status(400).send(err);
+    }
+
+})
+
+// S - SHOW - show route displays details of an individual fruit
+app.get('/vegetables/:id', async (req, res) => {
+    // res.send(fruits[req.params.indexOfFruitsArray]);
+    try {
+        const foundVegetable = await Vegetable.findById(req.params.id);
+        res.render('vegetables/Show', {vegetable: foundVegetable});
     } catch (err) {
         res.status(400).send(err);
     }
